@@ -1,0 +1,30 @@
+{
+    "name": "scriber/api-response",
+    "description": "Scriber API Response component",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Piotr Rzeczkowski",
+            "email": "piotr@rzeka.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Scriber\\Component\\ApiResponse\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Scriber\\Component\\ApiResponse\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "symfony/http-kernel": "^4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.4",
+        "symfony/event-dispatcher": "^4.1"
+    }
+}
