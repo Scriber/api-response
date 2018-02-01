@@ -7,11 +7,6 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class JsonResponsePayload implements ResponsePayloadInterface, ResponseBuilderInterface
 {
     /**
-     * @return array
-     */
-    abstract protected function getData(): array;
-
-    /**
      * @param int $status
      * @param array $headers
      *
