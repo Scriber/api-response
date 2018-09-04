@@ -31,7 +31,7 @@ class OnKernelViewSerializableResponseObjectSubscriber implements EventSubscribe
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => 'serializableResponseObject'
+            KernelEvents::VIEW => 'serializableResponseSubscriber'
         ];
     }
 
