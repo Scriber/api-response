@@ -25,7 +25,11 @@ class OnKernelViewResponsePayloadSubscriberTest extends TestCase
             'kernel.view' => 'onResponsePayload'
         ];
 
+        $method = $expected['kernel.view'];
+        $methodExists = method_exists(OnKernelViewResponsePayloadSubscriber::class, $method);
+
         static::assertEquals($expected, $events);
+        static::assertTrue($methodExists, sprintf('Method %s not found', $method));
     }
 
     public function testOnResponsePayloadEventHasResponse()
