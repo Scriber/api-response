@@ -42,10 +42,14 @@ class OnKernelViewSerializableResponseObjectSubscriberTest extends TestCase
         $events = OnKernelViewSerializableResponseObjectSubscriber::getSubscribedEvents();
 
         $expected = [
-            'kernel.view' => 'serializableResponseObject'
+            'kernel.view' => 'serializableResponseSubscriber'
         ];
 
+        $method = $expected['kernel.view'];
+        $methodExists = method_exists(OnKernelViewSerializableResponseObjectSubscriber::class, $method);
+
         static::assertEquals($expected, $events);
+        static::assertTrue($methodExists, sprintf('Method %s not found', $method));
     }
 
     public function testOnResponsePayloadEventHasResponse()
