@@ -3,6 +3,7 @@ namespace Scriber\Component\ApiResponse\Tests\Symfony\EventListener;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Scriber\Component\ApiResponse\SerializableResponseObjectContextAwareInterface;
 use Scriber\Component\ApiResponse\SerializableResponseObjectHttpCodeAwareInterface;
 use Scriber\Component\ApiResponse\SerializableResponseObjectInterface;
 use Scriber\Component\ApiResponse\SerializableResponseObjectResponseHeadersAwareInterface;
@@ -218,6 +219,51 @@ class OnKernelViewSerializableResponseObjectSubscriberTest extends TestCase
                     $response->headers->has($testHeader) &&
                     $response->headers->get($testHeader) === $testHeaderValue;
             }));
+
+        $subscriber = new OnKernelViewSerializableResponseObjectSubscriber($this->serializer);
+        $subscriber->serializableResponseSubscriber($event);
+    }
+
+    public function testItSetsSerializerContext()
+    {
+        $context = ['test' => 'context'];
+
+        $event = $this->createMock(GetResponseForControllerResultEvent::class);
+        $controllerResult = new class($context) implements
+            SerializableResponseObjectInterface,
+            SerializableResponseObjectContextAwareInterface {
+            private $context;
+
+            public function __construct(array $context)
+            {
+                $this->context = $context;
+            }
+
+            public function serializerContext(): array
+            {
+                return $this->context;
+            }
+        };
+
+        $event
+            ->expects(static::once())
+            ->method('hasResponse')
+            ->willReturn(false);
+
+        $event
+            ->expects(static::once())
+            ->method('getControllerResult')
+            ->willReturn($controllerResult);
+
+        $this->serializer
+            ->expects(static::once())
+            ->method('serialize')
+            ->with([
+                $controllerResult,
+                'json',
+                $context,
+            ])
+            ->willReturn('{}');
 
         $subscriber = new OnKernelViewSerializableResponseObjectSubscriber($this->serializer);
         $subscriber->serializableResponseSubscriber($event);
