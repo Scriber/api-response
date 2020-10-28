@@ -1,6 +1,7 @@
 <?php
 namespace Scriber\Component\ApiResponse\Symfony\EventListener;
 
+use Scriber\Component\ApiResponse\SerializableResponseObjectContextAwareInterface;
 use Scriber\Component\ApiResponse\SerializableResponseObjectHttpCodeAwareInterface;
 use Scriber\Component\ApiResponse\SerializableResponseObjectInterface;
 use Scriber\Component\ApiResponse\SerializableResponseObjectResponseHeadersAwareInterface;
@@ -52,11 +53,13 @@ class OnKernelViewSerializableResponseObjectSubscriber implements EventSubscribe
         $statusCode = $result instanceof SerializableResponseObjectHttpCodeAwareInterface ? $result->responseHttpCode() : 200;
         $headers = $result instanceof SerializableResponseObjectResponseHeadersAwareInterface ? $result->responseHeaders() : [];
 
+        $serializerContext = $result instanceof SerializableResponseObjectContextAwareInterface ? $result->serializerContext() : [];
         $event->setResponse(
             JsonResponse::fromJsonString(
                 $this->serializer->serialize(
                     $result,
-                    'json'
+                    'json',
+                    $serializerContext
                 ),
                 $statusCode,
                 $headers
